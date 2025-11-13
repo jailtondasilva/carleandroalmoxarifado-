@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastrar Produto{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Cadastrar Novo Produto</h1>
+
+    {% if erros %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Erros encontrados:</strong>
+        <ul class="mb-0">
+            {% for campo, msg in erros.items %}
+            <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+    <form method="post" class="card p-4">
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="codigo" class="form-label">Código *</label>
+                <input type="text" class="form-control" id="codigo" name="codigo" value="{{ val.codigo }}" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="nome" class="form-label">Nome do Produto *</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="{{ val.nome }}" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea class="form-control" id="descricao" name="descricao" rows="3">{{ val.descricao }}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="categoria" class="form-label">Categoria</label>
+                <select class="form-select" id="categoria" name="categoria">
+                    <option value="">Selecione uma categoria</option>
+                    {% for cat in categorias %}
+                    <option value="{{ cat.id }}" {% if val.categoria|stringformat:"s" == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="instituicao" class="form-label">Instituição *</label>
+                <select class="form-select" id="instituicao" name="instituicao" required>
+                    <option value="">Selecione uma instituição</option>
+                    {% for inst in instituicoes %}
+                    <option value="{{ inst.id }}" {% if val.instituicao|stringformat:"s" == inst.id|stringformat:"s" %}selected{% endif %}>{{ inst.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="quantidade_minima" class="form-label">Quantidade Mínima</label>
+                <input type="number" class="form-control" id="quantidade_minima" name="quantidade_minima" value="{{ val.quantidade_minima }}" min="0">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="preco_unitario" class="form-label">Preço Unitário (R$)</label>
+                <input type="number" class="form-control" id="preco_unitario" name="preco_unitario" value="{{ val.preco_unitario }}" min="0" step="0.01">
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">Salvar Produto</button>
+            <a href="{% url 'lista_produtos' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

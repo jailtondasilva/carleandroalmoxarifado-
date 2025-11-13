@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Deletar Produto{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Confirmar Exclusão</h5>
+        </div>
+        <div class="card-body">
+            <p class="mb-3">Deseja realmente deletar o produto <strong>{{ produto.nome }}</strong>?</p>
+            
+            <div class="alert alert-info">
+                <strong>Informações do Produto:</strong>
+                <ul class="mb-0">
+                    <li>Código: {{ produto.codigo }}</li>
+                    <li>Quantidade em Estoque: {{ produto.quantidade_atual }}</li>
+                    <li>Categoria: {{ produto.categoria.nome|default:"N/A" }}</li>
+                </ul>
+            </div>
+
+            <form method="post" class="d-flex gap-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim, Deletar</button>
+                <a href="{% url 'lista_produtos' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Instituições</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+        th { background: #f4f4f4; }
+        h2 { color: #007bff; }
+    </style>
+</head>
+<body>
+    <h2>Lista de Instituições</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CEP</th>
+                <th>Logradouro</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Telefone</th>
+                <th>CNPJ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instituicao in instituicoes %}
+            <tr>
+                <td>{{ instituicao.nome }}</td>
+                <td>{{ instituicao.cep }}</td>
+                <td>{{ instituicao.logradouro }}</td>
+                <td>{{ instituicao.bairro }}</td>
+                <td>{{ instituicao.cidade }}</td>
+                <td>{{ instituicao.estado }}</td>
+                <td>{{ instituicao.telefone }}</td>
+                <td>{{ instituicao.cnpj }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">Nenhuma instituição cadastrada.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

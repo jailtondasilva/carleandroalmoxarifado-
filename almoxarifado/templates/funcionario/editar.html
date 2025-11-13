@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+<!-- Essa linha indica que o template herda (estende) de "base.html". 
+     Isso significa que todo o layout base (menu, cabeçalho, rodapé) virá de lá. -->
+
+{% block content %}
+<!-- Início do bloco "content". O conteúdo daqui vai substituir o bloco correspondente em base.html. -->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header">Editar Funcionário</h2>
+            <!-- Título da página. -->
+        </div>
+    </div>
+
+    <div class="funcionario form">
+        <!-- Container do formulário de edição de funcionário. -->
+        <form method="post" class="form-horizontal">
+            {% csrf_token %}
+            <!-- Token de segurança contra CSRF (Cross-Site Request Forgery). 
+                 Obrigatório em formulários POST no Django. -->
+
+            {% if erros %}
+                <!-- Verifica se existem erros de validação passados pela view. -->
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for campo, mensagem in erros.items %}
+                            <li>{{ mensagem }}</li>
+                            <!-- Lista todos os erros exibindo a mensagem. -->
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <!-- Campo: Nome -->
+                <div class="col-lg-6 form-group">
+                    <label for="id_nome" class="control-label required">Nome</label>
+                    <input type="text" name="nome" id="id_nome" class="form-control" required 
+                           value="{{ val.nome|default_if_none:'' }}">
+                    <!-- Campo obrigatório. O valor é preenchido automaticamente 
+                         com os dados do funcionário, se existirem. -->
+                </div>
+
+                <!-- Campo: Data de Nascimento -->
+                <div class="col-lg-4 form-group">
+                    <label for="id_data_nascimento" class="control-label">Data de Nascimento</label>
+                    <input type="date" name="data_nascimento" id="id_data_nascimento" class="form-control" 
+                           value="{{ val.data_nascimento|date:'Y-m-d' }}">
+                    <!-- Usa filtro "date" para formatar a data no padrão aceito pelo input HTML. -->
+                </div>
+
+                <!-- Campo: E-mail -->
+                <div class="col-lg-6 form-group">
+                    <label for="id_email" class="control-label required">E-mail</label>
+                    <input type="email" name="email" id="id_email" class="form-control" required 
+                           value="{{ val.email|default_if_none:'' }}">
+                </div>
+
+                <!-- Campo: Telefone -->
+                <div class="col-lg-4 form-group">
+                    <label for="id_telefone" class="control-label">Telefone</label>
+                    <input type="text" name="telefone" id="id_telefone" class="form-control" 
+                           value="{{ val.telefone|default_if_none:'' }}">
+                </div>
+
+                <!-- Campo: Instituição -->
+                <div class="col-lg-6 form-group">
+                    <label for="id_instituicao" class="control-label required">Instituição</label>
+                    <select name="instituicao" id="id_instituicao" class="form-control" required>
+                        <option value="">-- Selecione --</option>
+                        {% for inst in instituicoes %}
+                            <option value="{{ inst.id }}" {% if val.instituicao == inst.id %}selected{% endif %}>
+                                {{ inst.nome }}
+                            </option>
+                            <!-- Cria as opções do select com as instituições cadastradas. 
+                                 Se o funcionário já tiver instituição vinculada, marca como "selected". -->
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <!-- Botão de salvar -->
+                <div class="col-lg-3 form-group">
+                    <button type="submit" class="btn btn-primary colorprimarybtn">Salvar</button>
+                </div>
+                <!-- Botão de cancelar -->
+                <div class="col-lg-3 form-group">
+                    <a href="{% url 'lista_funcionarios' %}" class="btn btn-secondary">Cancelar</a>
+                    <!-- Link para a lista de funcionários, usando a URL configurada no urls.py -->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+<!-- Fim do bloco de conteúdo. -->

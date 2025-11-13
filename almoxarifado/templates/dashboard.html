@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Dashboard do Almoxarifado</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total de Produtos</h5>
+                    <p class="card-text display-4">{{ total_produtos }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Estoque Baixo</h5>
+                    <p class="card-text display-4">{{ produtos_estoque_baixo }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Movimentações (7 dias)</h5>
+                    <p class="card-text display-4">{{ movimentacoes_semana }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Valor Total</h5>
+                    <p class="card-text">R$ {{ valor_total_estoque|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Últimas Movimentações</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Tipo</th>
+                                <th>Qtd</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mov in ultimas_movimentacoes %}
+                            <tr>
+                                <td>{{ mov.produto.nome }}</td>
+                                <td><span class="badge bg-info">{{ mov.get_tipo_display }}</span></td>
+                                <td>{{ mov.quantidade }}</td>
+                                <td>{{ mov.data_movimentacao|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Resumo de Movimentações</h5>
+                </div>
+                <div class="card-body">
+                    <p>Entradas: <strong class="text-success">{{ entradas }}</strong></p>
+                    <p>Saídas: <strong class="text-danger">{{ saidas }}</strong></p>
+                    <p>Ajustes: <strong class="text-warning">{{ ajustes }}</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

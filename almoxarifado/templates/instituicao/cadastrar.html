@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+<!-- Herda o layout base (menu, header, footer, etc.) para manter consistência visual no sistema. -->
+
+{% block title %}Cadastrar Instituição{% endblock %}
+<!-- Define o título da página exibido na aba do navegador ou em <title> no base.html. -->
+
+{% block content %}
+<!-- Início do conteúdo específico desta página. -->
+
+<div class="container-fluid">
+    <!-- Container responsivo que ocupa 100% da largura da tela. -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header">Cadastrar Instituição</h2>
+            <!-- Cabeçalho da página. -->
+        </div>
+    </div>
+
+    <div class="instituicao form">
+        <!-- Div para estilizar/formatar a seção do formulário. -->
+        <form method="post" class="form-horizontal">
+            {% csrf_token %}
+            <!-- Proteção contra ataques CSRF. Obrigatório em formulários POST no Django. -->
+
+            {% if erros %}
+                <!-- Caso haja erros vindos da view (ex: campos obrigatórios não preenchidos). -->
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for campo, mensagem in erros.items %}
+                            <li>{{ mensagem }}</li>
+                            <!-- Exibe cada mensagem de erro correspondente ao campo. -->
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <!-- Campos do formulário -->
+            <div class="row">
+                <!-- Nome -->
+                <div class="col-lg-6 form-group">
+                    <label for="id_nome" class="control-label required">Nome</label>
+                    <input type="text" name="nome" id="id_nome" class="form-control" required 
+                           value="{{ val.nome|default_if_none:'' }}">
+                </div>
+
+                <!-- CEP -->
+                <div class="col-lg-3 form-group">
+                    <label for="id_cep" class="control-label required">CEP</label>
+                    <input type="text" name="cep" id="id_cep" class="form-control" required 
+                           value="{{ val.cep|default_if_none:'' }}">
+                </div>
+
+                <!-- Logradouro -->
+                <div class="col-lg-6 form-group">
+                    <label for="id_logradouro" class="control-label required">Logradouro</label>
+                    <input type="text" name="logradouro" id="id_logradouro" class="form-control" required 
+                           value="{{ val.logradouro|default_if_none:'' }}">
+                </div>
+
+                <!-- Número -->
+                <div class="col-lg-2 form-group">
+                    <label for="id_numero" class="control-label required">Número</label>
+                    <input type="text" name="numero" id="id_numero" class="form-control" required 
+                           value="{{ val.numero|default_if_none:'' }}">
+                </div>
+
+                <!-- Bairro -->
+                <div class="col-lg-4 form-group">
+                    <label for="id_bairro" class="control-label required">Bairro</label>
+                    <input type="text" name="bairro" id="id_bairro" class="form-control" required 
+                           value="{{ val.bairro|default_if_none:'' }}">
+                </div>
+
+                <!-- Cidade -->
+                <div class="col-lg-4 form-group">
+                    <label for="id_cidade" class="control-label required">Cidade</label>
+                    <input type="text" name="cidade" id="id_cidade" class="form-control" required 
+                           value="{{ val.cidade|default_if_none:'' }}">
+                </div>
+
+                <!-- Estado -->
+                <div class="col-lg-2 form-group">
+                    <label for="id_estado" class="control-label required">Estado</label>
+                    <input type="text" name="estado" id="id_estado" class="form-control" maxlength="2" required 
+                           value="{{ val.estado|default_if_none:'' }}">
+                    <!-- O maxlength=2 força o usuário a digitar apenas a sigla do estado (ex: SP, RJ). -->
+                </div>
+
+                <!-- Telefone -->
+                <div class="col-lg-4 form-group">
+                    <label for="id_telefone" class="control-label required">Telefone</label>
+                    <input type="text" name="telefone" id="id_telefone" class="form-control" required 
+                           value="{{ val.telefone|default_if_none:'' }}">
+                </div>
+
+                <!-- CNPJ -->
+                <div class="col-lg-4 form-group">
+                    <label for="id_cnpj" class="control-label required">CNPJ</label>
+                    <input type="text" name="cnpj" id="id_cnpj" class="form-control" required 
+                           value="{{ val.cnpj|default_if_none:'' }}">
+                </div>
+            </div>
+
+            <!-- Botões de ação -->
+            <div class="row mt-3">
+                <div class="col-lg-3 form-group">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <!-- Envia o formulário para ser processado na view. -->
+                </div>
+                <div class="col-lg-3 form-group">
+                    <a href="{% url 'lista_instituicoes' %}" class="btn btn-secondary">Cancelar</a>
+                    <!-- Link que volta para a lista de instituições, sem salvar nada. -->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+<!-- Fim do bloco de conteúdo. -->

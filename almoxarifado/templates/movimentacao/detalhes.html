@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhes da Movimentação{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Movimentação #{{ movimentacao.id }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p><strong>Tipo:</strong> 
+                        {% if movimentacao.tipo == 'entrada' %}
+                        <span class="badge bg-success">Entrada</span>
+                        {% elif movimentacao.tipo == 'saida' %}
+                        <span class="badge bg-danger">Saída</span>
+                        {% else %}
+                        <span class="badge bg-warning">Ajuste</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Data/Hora:</strong> {{ movimentacao.data_movimentacao|date:"d/m/Y H:i:s" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Funcionário:</strong> {{ movimentacao.funcionario.nome|default:"Sistema" }}</p>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <h6>Informações do Produto</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Código:</strong> {{ movimentacao.produto.codigo }}</p>
+                        <p><strong>Nome:</strong> {{ movimentacao.produto.nome }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Categoria:</strong> {{ movimentacao.produto.categoria.nome|default:"N/A" }}</p>
+                        <p><strong>Quantidade Movimentada:</strong> {{ movimentacao.quantidade }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <p><strong>Motivo:</strong> {{ movimentacao.motivo }}</p>
+                <p><strong>Observações:</strong></p>
+                <p>{{ movimentacao.observacoes|default:"Nenhuma observação" }}</p>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <a href="{% url 'lista_movimentacoes' %}" class="btn btn-secondary">Voltar</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

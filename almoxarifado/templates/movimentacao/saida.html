@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar Saída{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Registrar Saída de Produto</h1>
+
+    {% if erros %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Erros encontrados:</strong>
+        <ul class="mb-0">
+            {% for campo, msg in erros.items %}
+            <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+    <form method="post" class="card p-4">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="produto" class="form-label">Produto *</label>
+            <select class="form-select" id="produto" name="produto" required>
+                <option value="">Selecione um produto</option>
+                {% for prod in produtos %}
+                <option value="{{ prod.id }}" {% if val.produto|stringformat:"s" == prod.id|stringformat:"s" %}selected{% endif %}>
+                    {{ prod.codigo }} - {{ prod.nome }} (Qtd: {{ prod.quantidade_atual }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="quantidade" class="form-label">Quantidade *</label>
+            <input type="number" class="form-control" id="quantidade" name="quantidade" value="{{ val.quantidade }}" min="1" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="motivo" class="form-label">Motivo da Saída *</label>
+            <select class="form-select" id="motivo" name="motivo" required>
+                <option value="">Selecione um motivo</option>
+                <option value="Uso" {% if val.motivo == "Uso" %}selected{% endif %}>Uso</option>
+                <option value="Descarte" {% if val.motivo == "Descarte" %}selected{% endif %}>Descarte</option>
+                <option value="Empréstimo" {% if val.motivo == "Empréstimo" %}selected{% endif %}>Empréstimo</option>
+                <option value="Transferência" {% if val.motivo == "Transferência" %}selected{% endif %}>Transferência</option>
+                <option value="Outro" {% if val.motivo == "Outro" %}selected{% endif %}>Outro</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3">{{ val.observacoes }}</textarea>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-danger">Confirmar Saída</button>
+            <a href="{% url 'lista_movimentacoes' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

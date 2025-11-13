@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}Relatório de Estoque{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Relatório de Estoque</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Categoria</label>
+                    <select name="categoria" class="form-select">
+                        <option value="">Todas as categorias</option>
+                        {% for cat in categorias %}
+                        <option value="{{ cat.id }}">{{ cat.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"></label>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="estoque_baixo" value="sim" id="estoque_baixo" {% if estoque_baixo == 'sim' %}checked{% endif %}>
+                        <label class="form-check-label" for="estoque_baixo">
+                            Apenas com estoque baixo
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-info w-100">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Resumo</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <p><strong>Total de Itens em Estoque:</strong> {{ total_itens }}</p>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Valor Total:</strong> R$ {{ valor_total|floatformat:2 }}</p>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Produtos Listados:</strong> {{ produtos|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Código</th>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Qtd Atual</th>
+                    <th>Qtd Mín</th>
+                    <th>Preço Unit.</th>
+                    <th>Valor Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.codigo }}</td>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.categoria.nome|default:"N/A" }}</td>
+                    <td>{{ produto.quantidade_atual }}</td>
+                    <td>{{ produto.quantidade_minima }}</td>
+                    <td>R$ {{ produto.preco_unitario|floatformat:2 }}</td>
+                    <td>R$ {{ produto.quantidade_atual|multiply:produto.preco_unitario|floatformat:2 }}</td>
+                    <td>
+                        {% if produto.esta_com_estoque_baixo %}
+                        <span class="badge bg-warning">Baixo</span>
+                        {% else %}
+                        <span class="badge bg-success">OK</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">Nenhum produto encontrado</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Alerta - Estoque Baixo{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Atenção!</strong> {{ total }} produto(s) com estoque abaixo do mínimo.
+    </div>
+
+    <h1>Produtos com Estoque Baixo</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Código</th>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Qtd Atual</th>
+                    <th>Qtd Mín</th>
+                    <th>Diferença</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                <tr class="table-warning">
+                    <td><strong>{{ produto.codigo }}</strong></td>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.categoria.nome|default:"N/A" }}</td>
+                    <td><strong>{{ produto.quantidade_atual }}</strong></td>
+                    <td>{{ produto.quantidade_minima }}</td>
+                    <td>
+                        {% if produto.quantidade_atual < produto.quantidade_minima %}
+                        Faltam {{ produto.quantidade_minima|add:0 }} unidades
+                        {% else %}
+                        OK
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'registrar_entrada' %}" class="btn btn-sm btn-success">+ Entrada</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-success">
+                        <strong>Todos os produtos estão com estoque adequado!</strong>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

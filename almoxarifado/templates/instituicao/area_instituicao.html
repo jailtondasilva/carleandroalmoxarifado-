@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row text-center main-footer" id="footer">
+      <div class="footer-title">{{ request.user.aluno.escola.nome }}</div>
+  </div>
+  <br>
+  <div class="row text-center">
+    <div class="col-sm-6 col-md-5 col-lg-4 menucard"> 
+      <a href="{% url 'lista_instituicoes' %}" class="menucardicones">
+        <div class="card menuprincipal">
+          <i class="fa fa-building fa-3x menuicone"></i>
+          <div class="card-body">
+            <h6 class="card-title">Instituições</h6>
+          </div>
+        </div>
+      </a>   
+    </div>
+    <div class="col-sm-6 col-md-5 col-lg-4 menucard"> 
+      <a href="{% url 'lista_funcionarios' %}" class="menucardicones">
+        <div class="card menuprincipal">
+          <i class="fa fa-users fa-3x menuicone"></i>
+          <div class="card-body">
+            <h6 class="card-title">Funcionários</h6>
+          </div>
+        </div>
+      </a>   
+    </div>
+    <div class="col-sm-6 col-md-5 col-lg-4 menucard"> 
+      <a href="{% url 'cadastrar_instituicoes' %}" class="menucardicones">
+        <div class="card menuprincipal">
+          <i class="fa fa-plus fa-3x menuicone"></i>
+          <div class="card-body">
+            <h6 class="card-title">Nova Instituição</h6>
+          </div>
+        </div>
+      </a>   
+    </div>
+
+  </div>
+</div>
+{% endblock %}

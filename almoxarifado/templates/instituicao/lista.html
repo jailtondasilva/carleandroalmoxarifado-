@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+<!-- Herda o layout principal definido em base.html, incluindo menu, header e footer. -->
+
+{% block title %}Lista de Instituições{% endblock %}
+<!-- Define o título da página que será exibido no navegador. -->
+
+{% block content %}
+<!-- Início do conteúdo principal desta página. -->
+
+<h2>Lista de Instituições</h2>
+<!-- Cabeçalho da página -->
+
+<!-- Formulário de busca -->
+<form method="get">
+    <!-- O formulário envia os parâmetros de busca via GET para manter a URL filtrada. -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-2">
+            <!-- Campo de busca por nome ou CNPJ -->
+            <input type="text" name="q" class="form-control" placeholder="Pesquisar por nome ou CNPJ" value="{{ request.GET.q }}">
+            <!-- O valor do campo é mantido ao atualizar a página, usando o valor enviado na requisição GET. -->
+        </div>
+        <div class="col-lg-2 mb-3">
+            <!-- Botão para enviar a pesquisa -->
+            <button type="submit" class="btn btn-primary">Pesquisar</button>
+        </div>
+        <div class="col-lg-3 mb-3">
+            <!-- Botão para acessar a página de cadastro de nova instituição -->
+            <a href="{% url 'cadastrar_instituicoes' %}" class="btn btn-primary">Cadastrar Nova Instituição</a>    
+        </div>
+          <div class="col-lg-2 mb-2">
+        {# Link para baixar PDF da lista de alunos #}
+        <a href="{% url 'instituicao_pdf' %}" class="btn btn-primary colorprimarybtn">Baixar PDF</a>
+        </div>
+    </div>
+</form>
+
+<!-- Tabela de instituições -->
+<table class="table table-striped">
+    <!-- table-striped adiciona linhas alternadas para melhor visualização -->
+    <thead>
+        <tr>
+            <!-- Cabeçalhos da tabela -->
+            <th>Nome</th>
+            <th>CEP</th>
+            <th>Logradouro</th>
+            <th>Bairro</th>
+            <th>Cidade</th>
+            <th>Estado</th>
+            <th>Telefone</th>
+            <th>CNPJ</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for instituicao in page_obj %}
+        <!-- Loop para listar cada instituição recebida da view -->
+        <tr>
+            <td>{{ instituicao.nome }}</td>
+            <td>{{ instituicao.cep }}</td>
+            <td>{{ instituicao.logradouro }}</td>
+            <td>{{ instituicao.bairro }}</td>
+            <td>{{ instituicao.cidade }}</td>
+            <td>{{ instituicao.estado }}</td>
+            <td>{{ instituicao.telefone }}</td>
+            <td>{{ instituicao.cnpj }}</td>
+            <td>
+                <!-- Botão para editar a instituição -->
+                <a href="{% url 'editar_instituicao' instituicao.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                
+                <!-- Formulário para excluir a instituição -->
+                <form method="post" action="{% url 'excluir_instituicao' instituicao.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <!-- Token CSRF para segurança -->
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir esta instituição?');">
+                        Excluir
+                    </button>
+                    <!-- Confirmação de exclusão via JavaScript -->
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <!-- Caso não existam instituições cadastradas -->
+        <tr>
+            <td colspan="9">Nenhuma instituição cadastrada.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Paginação -->
+{% if page_obj.has_other_pages %}
+<nav>
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1">Primeira</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+        {% endif %}
+
+        <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}
+<!-- Fim do bloco de conteúdo principal -->

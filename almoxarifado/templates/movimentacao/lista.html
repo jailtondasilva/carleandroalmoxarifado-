@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Movimentações{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Movimentações de Estoque</h1>
+        <div class="gap-2">
+            <a href="{% url 'registrar_entrada' %}" class="btn btn-success">+ Entrada</a>
+            <a href="{% url 'registrar_saida' %}" class="btn btn-danger">- Saída</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-7">
+                    <input type="text" name="q" class="form-control" placeholder="Buscar por produto..." value="{{ q }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="tipo" class="form-select">
+                        <option value="">Todos os tipos</option>
+                        {% for val, label in tipos %}
+                        <option value="{{ val }}" {% if tipo == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-info w-100">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Produto</th>
+                    <th>Tipo</th>
+                    <th>Quantidade</th>
+                    <th>Funcionário</th>
+                    <th>Data/Hora</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mov in page_obj %}
+                <tr>
+                    <td>#{{ mov.id }}</td>
+                    <td>{{ mov.produto.nome }} ({{ mov.produto.codigo }})</td>
+                    <td>
+                        {% if mov.tipo == 'entrada' %}
+                        <span class="badge bg-success">Entrada</span>
+                        {% elif mov.tipo == 'saida' %}
+                        <span class="badge bg-danger">Saída</span>
+                        {% else %}
+                        <span class="badge bg-warning">Ajuste</span>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ mov.quantidade }}</strong></td>
+                    <td>{{ mov.funcionario.nome|default:"Sistema" }}</td>
+                    <td>{{ mov.data_movimentacao|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'detalhes_movimentacao' mov.id %}" class="btn btn-sm btn-info">Ver</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">Nenhuma movimentação encontrada</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Paginação" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">Primeira</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+            {% endif %}
+
+            <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

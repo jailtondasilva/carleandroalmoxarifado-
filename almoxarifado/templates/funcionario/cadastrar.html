@@ -1,0 +1,93 @@
+{# Indica que este template herda do arquivo base.html (estrutura padrão do site) #}
+{% extends 'base.html' %}
+
+{# Define o título da página que aparece na aba do navegador #}
+{% block title %}Cadastrar Funcionário{% endblock %}
+
+{# Define o conteúdo principal da página #}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Cabeçalho da página -->
+            <h2 class="page-header">Cadastrar Funcionário</h2>
+        </div>
+    </div>
+
+    <div class="funcionario form">
+        <!-- Formulário de cadastro -->
+        <form method="post" class="form-horizontal">
+            {# Token de segurança obrigatório em formulários POST no Django #}
+            {% csrf_token %}
+
+            {# Exibe erros de validação, caso existam #}
+            {% if erros %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for campo, mensagem in erros.items %}
+                            <li>{{ mensagem }}</li>  {# Mostra a mensagem de erro para cada campo inválido #}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <!-- Campo Nome -->
+                <div class="col-lg-6 form-group">
+                    <label for="id_nome" class="control-label required">Nome</label>
+                    <input type="text" name="nome" id="id_nome" class="form-control" required 
+                           value="{{ val.nome|default_if_none:'' }}">
+                </div>
+
+                <!-- Campo Data de Nascimento -->
+                <div class="col-lg-3 form-group">
+                    <label for="id_data_nascimento" class="control-label required">Data de Nascimento</label>
+                    <input type="date" name="data_nascimento" id="id_data_nascimento" class="form-control" required 
+                           value="{{ val.data_nascimento|default_if_none:'' }}">
+                </div>
+
+                <!-- Campo E-mail -->
+                <div class="col-lg-6 form-group">
+                    <label for="id_email" class="control-label required">E-mail</label>
+                    <input type="email" name="email" id="id_email" class="form-control" required 
+                           value="{{ val.email|default_if_none:'' }}">
+                </div>
+
+                <!-- Campo Telefone -->
+                <div class="col-lg-4 form-group">
+                    <label for="id_telefone" class="control-label required">Telefone</label>
+                    <input type="text" name="telefone" id="id_telefone" class="form-control" required 
+                           value="{{ val.telefone|default_if_none:'' }}">
+                </div>
+
+                
+                <!-- Campo Instituição (select com opções vindas do banco) -->
+                <div class="col-lg-6 form-group">
+                    <label for="id_instituicao" class="control-label required">Instituição</label>
+                    <select name="instituicao" id="id_instituicao" class="form-control" required>
+                        <option value="">-- Selecione uma Instituição --</option>
+                        {# Percorre a lista de instituições enviadas pela view e cria opções #}
+                        {% for inst in instituicoes %}
+                            <option value="{{ inst.id }}" 
+                                {% if val.instituicao == inst.id %}selected{% endif %}>
+                                {{ inst.nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Botões de ação -->
+            <div class="row mt-3">
+                <div class="col-lg-3 form-group">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <!-- Botão de cancelar que volta para a lista de funcionários -->
+                    <a href="{% url 'lista_funcionarios' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

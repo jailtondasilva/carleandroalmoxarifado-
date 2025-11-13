@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+    <!-- Configuração de caracteres -->
+    <meta charset="UTF-8">
+    
+    <!-- Título da página (pode ser sobrescrito nas páginas filhas) -->
+    <title>{% block title %}SYSEBTT - Sistema de Almoxarifado{% endblock %}</title>
+    
+    <!-- Responsividade para dispositivos móveis -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Força o IE a usar o modo mais moderno -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Ícone da aba do navegador (favicon) -->
+    <link rel="shortcut icon" href="{% static 'img/icone.png' %}" type="image/x-icon">
+
+    <!-- CSS do Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+    
+    <!-- Ícones do Google (Material Icons) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <!-- Fonte Poppins (diferentes pesos) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700">
+    
+    <!-- Ícones Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" crossorigin="anonymous">
+
+    <!-- Arquivo CSS próprio do sistema -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- jQuery (necessário para manipulação do DOM e Bootstrap JS) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar (menu lateral esquerdo) -->
+        <nav id="sidebar">
+            <a href="#">
+                <div style="position: relative;">
+                    <!-- Logo principal do sistema -->
+                    <img src="{% static 'img/logoprincipal.png' %}" class="img-responsive center-block inner-image" />
+                </div>
+            </a>
+            <ul class="list-unstyled components menulink">
+                <!-- Link para Dashboard -->
+                <li><a href="{% url 'dashboard' %}" class="menulink"><i class="fa fa-tachometer-alt fa-fw"></i> Dashboard</a></li>
+                
+                <!-- Link para Produtos -->
+                <li><a href="{% url 'lista_produtos' %}" class="menulink"><i class="fa fa-box fa-fw"></i> Produtos</a></li>
+
+                <!-- Link para Movimentações -->
+                <li><a href="{% url 'lista_movimentacoes' %}" class="menulink"><i class="fa fa-exchange-alt fa-fw"></i> Movimentações</a></li>
+
+                <!-- Link para Estoque Baixo -->
+                <li><a href="{% url 'estoque_baixo' %}" class="menulink"><i class="fa fa-exclamation-triangle fa-fw"></i> Estoque Baixo</a></li>
+
+                <!-- Link para Relatórios -->
+                <li><a href="{% url 'relatorio_estoque' %}" class="menulink"><i class="fa fa-chart-bar fa-fw"></i> Relatório de Estoque</a></li>
+
+                <li><a href="{% url 'relatorio_movimentacoes' %}" class="menulink"><i class="fa fa-chart-line fa-fw"></i> Relatório de Movimentações</a></li>
+
+                <!-- Link para lista de instituições -->
+                <li><a href="{% url 'lista_instituicoes' %}" class="menulink"><i class="fa fa-university fa-fw"></i> Instituições</a></li>
+
+                <!-- Link para funcionários -->
+                <li><a href="{% url 'lista_funcionarios' %}" class="menulink"><i class="fa fa-users fa-fw"></i> Funcionários</a></li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo principal da página -->
+        <div class="content container-fluid">
+            <!-- Barra superior (navbar) -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <!-- Botão que abre/fecha o menu lateral -->
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                        <i class="fas fa-align-left"></i>
+                        <span><b>MENU</b></span>
+                    </button>
+
+                    <!-- Área da direita da navbar -->
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <!-- Mostra o nome completo do usuário logado (ou username) -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">{{ request.user.get_full_name|default:request.user.username }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Área onde o conteúdo de cada página será carregado -->
+            <div class="container-fluid mt-4">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts JS adicionais -->
+    <!-- Popper.js (necessário para dropdowns do Bootstrap) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    
+    <!-- Bootstrap JS (bundle com suporte a popper e outros recursos) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para controlar o botão que abre/fecha a sidebar -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active'); <!-- Adiciona/remove a classe "active" no menu -->
+            });
+        });
+    </script>
+</body>
+</html>
